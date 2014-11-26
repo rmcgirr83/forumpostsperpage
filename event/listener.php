@@ -56,7 +56,7 @@ class listener implements EventSubscriberInterface
 			$event['forum_data'] = $array;
 		}
 	}
-	
+
 	// ACP forums template output
 	public function acp_manage_forums_display_form($event)
 	{
@@ -64,7 +64,7 @@ class listener implements EventSubscriberInterface
 		$array['POSTS_PER_PAGE'] = $event['forum_data']['forum_posts_per_page'];
 		$event['template_data'] = $array;
 	}
-	
+
 	// validate the input
 	public function acp_manage_forums_validate_data($event)
 	{
@@ -74,5 +74,5 @@ class listener implements EventSubscriberInterface
 		);
 		validate_range($fpp_ary, $errors);
 		$event['errors'] = $errors;
-	}		
+	}
 }

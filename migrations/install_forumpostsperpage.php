@@ -49,7 +49,7 @@ class install_forumpostsperpage extends \phpbb\db\migration\migration
 			),
 		);
 	}
-	
+
 	public function revert_data()
 	{
 		return array(
