@@ -1,0 +1,7 @@
+services:
+    rmcgirr83.forumpostsperpage.listener:
+        class: rmcgirr83\forumpostsperpage\event\listener
+        arguments:
+            - @request
+        tags:
+            - { name: event.listener }
