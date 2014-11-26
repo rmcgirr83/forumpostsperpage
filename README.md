@@ -32,13 +32,15 @@ FIND
 
 ADD BEFORE
 
-`// extension forum posts per page
+```
+// extension forum posts per page
 if (!empty($topic_data['forum_posts_per_page']))
 {
 	// overwrite config['posts_per_page']
 	$config['posts_per_page'] = $topic_data['forum_posts_per_page'];
 }
-// end extension mod to file`
+// end extension mod to file
+```
 
 Save and upload file and ensure you use a strict text editor such as notepad++
 
