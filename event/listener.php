@@ -119,7 +119,7 @@ class listener implements EventSubscriberInterface
 
 	// modify and reset on search
 	public function search_modify_rowset($event)
-	{	
+	{
 		$forum_id = $event['rowset'];
 		foreach ($forum_id as $row)
 		{
