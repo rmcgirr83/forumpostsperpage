@@ -20,11 +20,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class listener implements EventSubscriberInterface
 {
 
+	/** @var \phpbb\config\config */
+	protected $config;	
+
 	/** @var \phpbb\request\request */
 	protected $request;
 
-	public function __construct(\phpbb\request\request $request)
+	public function __construct(\phpbb\config\config $config, \phpbb\request\request $request)
 	{
+		$this->config = $config;
 		$this->request = $request;
 	}
 
@@ -35,6 +39,8 @@ class listener implements EventSubscriberInterface
 			'core.acp_manage_forums_initialise_data'	=> 'acp_manage_forums_initialise_data',
 			'core.acp_manage_forums_display_form'		=> 'acp_manage_forums_display_form',
 			'core.acp_manage_forums_validate_data'		=> 'acp_manage_forums_validate_data',
+			'core.viewforum_get_topic_data'				=> 'viewforum_get_topic_data',
+			'core.viewtopic_modify_post_data'			=> 'viewtopic_modify_post_data',
 		);
 	}
 
@@ -74,5 +80,23 @@ class listener implements EventSubscriberInterface
 		);
 		validate_range($fpp_ary, $errors);
 		$event['errors'] = $errors;
+	}
+
+	// modify viewforum and reset config['posts_per_page']
+	public function viewforum_get_topic_data($event)
+	{
+		if (!empty($event['forum_data']['forum_posts_per_page']))
+		{
+			$this->config->set('posts_per_page', $event['forum_data']['forum_posts_per_page']);
+		}
+	}
+
+	// modify viewtopic and reset config['posts_per_page']
+	public function viewtopic_modify_post_data($event)
+	{
+		if (!empty($event['topic_data']['forum_posts_per_page']))
+		{
+			$this->config->set('posts_per_page', $event['topic_data']['forum_posts_per_page']);
+		}
 	}
 }
