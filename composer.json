@@ -2,7 +2,7 @@
 	"name": "rmcgirr83/forumpostsperpage",
 	"type": "phpbb-extension",
 	"description": "Allows forums to display different posts per page depending on setting in the ACP for the forum.",
-	"homepage": "https://github.com/RMcGirr83/php-3.1-ext-forumpostsperpage",
+	"homepage": "https://github.com/RMcGirr83/forumpostsperpage",
 	"version": "1.0.0",
 	"time": "2014-11-24",
 	"keywords": ["phpbb", "extension", "Forum Posts Per Page"],
