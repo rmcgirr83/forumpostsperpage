@@ -212,7 +212,7 @@ class listener implements EventSubscriberInterface
 		return $temp;
 	}
 
-	// need to retrieve the forum_id from the posts table
+	// need to retrieve the forum_id from the topics table
 	private function get_forum_id_from_topics_table($topic_id)
 	{
 		$sql = 'SELECT forum_id
