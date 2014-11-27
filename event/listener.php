@@ -203,17 +203,17 @@ class listener implements EventSubscriberInterface
 		$result = $this->db->sql_query($sql);
 		$temp = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-		
+
 		// now check the cache for an entry
 		$temp = $this->get_forum_data($temp['forum_id']);
 		return $temp;
 	}
 
-	// get forum posts per page and set the cache 
+	// get forum posts per page and set the cache
 	private function get_forum_data($forum_id)
 	{
 		if (($posts_per_page = $this->cache->get('_forum_posts_per_page')) === false)
-		{	
+		{
 			// we only want those forums that you can post in
 			$sql = 'SELECT forum_posts_per_page, forum_id
 					FROM ' . FORUMS_TABLE . '
