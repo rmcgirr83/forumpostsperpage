@@ -161,31 +161,20 @@ class listener implements EventSubscriberInterface
 		{
 			$string = $this->user->page['query_string'];
 			$string = parse_str($string, $output);
+
 			foreach ($output as $key => $value)
 			{
-				if ($key == 'p')
+				if ($key == 'p' || $key == 't')
 				{
-					$posts_per_page = $this->get_forum_id_from_posts_table($value);
-					if (!empty($posts_per_page))
-					{
-						$this->posts_per_page($posts_per_page);
-					}
+					$posts_per_page = $this->get_forum_id_from_table($key, $value);
 				}
-				if ($key == 'f')
+				else if ($key == 'f')
 				{
 					$posts_per_page = $this->get_forum_data($value);
-					if (!empty($posts_per_page))
-					{
-						$this->posts_per_page($posts_per_page);
-					}
 				}
-				if ($key == 't')
+				if (!empty($posts_per_page))
 				{
-					$posts_per_page = $this->get_forum_id_from_topics_table($value);
-					if (!empty($posts_per_page))
-					{
-						$this->posts_per_page($posts_per_page);
-					}
+					$this->posts_per_page($posts_per_page);
 				}
 			}
 		}
@@ -197,41 +186,34 @@ class listener implements EventSubscriberInterface
 		$this->config->offsetSet('posts_per_page', $data);
 	}
 
-	// need to retrieve the forum_id from the posts table
-	private function get_forum_id_from_posts_table($post_id)
+	// need to retrieve the forum_id from the table
+	private function get_forum_id_from_table($key, $value)
 	{
+		$sql_from = 'FROM ' . TOPICS_TABLE;
+		$sql_where = 'WHERE topic_id = ' . $value;
+
+		if ($key == 'p')
+		{
+			$sql_from = 'FROM ' . POSTS_TABLE;
+			$sql_where = 'WHERE post_id = ' . $value;
+		}
 		$sql = 'SELECT forum_id
-			FROM ' . POSTS_TABLE . '
-			WHERE post_id = ' . $post_id;
+			' . $sql_from . '
+			' . $sql_where;
 		$result = $this->db->sql_query($sql);
 		$temp = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-
+		
 		// now check the cache for an entry
 		$temp = $this->get_forum_data($temp['forum_id']);
 		return $temp;
 	}
 
-	// need to retrieve the forum_id from the topics table
-	private function get_forum_id_from_topics_table($topic_id)
-	{
-		$sql = 'SELECT forum_id
-			FROM ' . TOPICS_TABLE . '
-			WHERE topic_id = ' . $topic_id;
-		$result = $this->db->sql_query($sql);
-		$temp = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		// now check the cache for an entry
-		$temp = $this->get_forum_data($temp['forum_id']);
-		return $temp;
-	}
-
-	// get forum posts per page and set the cache
+	// get forum posts per page and set the cache 
 	private function get_forum_data($forum_id)
 	{
 		if (($posts_per_page = $this->cache->get('_forum_posts_per_page')) === false)
-		{
+		{	
 			// we only want those forums that you can post in
 			$sql = 'SELECT forum_posts_per_page, forum_id
 					FROM ' . FORUMS_TABLE . '
