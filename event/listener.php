@@ -21,7 +21,7 @@ class listener implements EventSubscriberInterface
 {
 
 	/** @var \phpbb\config\config */
-	protected $config;	
+	protected $config;
 
 	/** @var \phpbb\request\request */
 	protected $request;
@@ -41,6 +41,7 @@ class listener implements EventSubscriberInterface
 			'core.acp_manage_forums_validate_data'		=> 'acp_manage_forums_validate_data',
 			'core.viewforum_get_topic_data'				=> 'viewforum_get_topic_data',
 			'core.viewtopic_modify_post_data'			=> 'viewtopic_modify_post_data',
+			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
 		);
 	}
 
@@ -87,7 +88,7 @@ class listener implements EventSubscriberInterface
 	{
 		if (!empty($event['forum_data']['forum_posts_per_page']))
 		{
-			$this->config->set('posts_per_page', $event['forum_data']['forum_posts_per_page']);
+			$this->config->offsetSet('posts_per_page', $event['forum_data']['forum_posts_per_page']);
 		}
 	}
 
@@ -96,7 +97,16 @@ class listener implements EventSubscriberInterface
 	{
 		if (!empty($event['topic_data']['forum_posts_per_page']))
 		{
-			$this->config->set('posts_per_page', $event['topic_data']['forum_posts_per_page']);
+			$this->config->offsetSet('posts_per_page', $event['topic_data']['forum_posts_per_page']);
+		}
+	}
+
+	// modify and reset config['posts_per_page']
+	public function display_forums_modify_template_vars($event)
+	{
+		if (!empty($event['row']['forum_posts_per_page']))
+		{
+			$this->config->offsetSet('posts_per_page', $event['row']['forum_posts_per_page']);
 		}
 	}
 }
