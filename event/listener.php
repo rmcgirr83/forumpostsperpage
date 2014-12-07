@@ -56,9 +56,10 @@ class listener implements EventSubscriberInterface
 			// forum changes to config[posts_per_page]
 			'core.viewforum_get_topic_data'				=> 'viewforum_get_topic_data',
 			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
-			'core.search_modify_rowset'					=> 'search_modify_rowset',
+			'core.search_modify_tpl_ary'				=> 'search_modify_tpl_ary',
 			'core.modify_mcp_modules_display_option'	=> 'modify_mcp_modules_display_option',
 			'core.user_setup'							=> 'user_setup',
+			'core.viewonline_overwrite_location'		=> 'viewonline_overwrite_location',
 		);
 	}
 
@@ -125,12 +126,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	// modify and reset on search
-	public function search_modify_rowset($event)
+	public function search_modify_tpl_ary($event)
 	{
-		$forum_id = $event['rowset'];
-		foreach ($forum_id as $row)
+		if ($event['show_results'] == 'topics')
 		{
-			$posts_per_page = $this->get_forum_data($row['forum_id']);
+			$forum_id = $event['row']['forum_id'];
+			$posts_per_page = $this->get_forum_data($forum_id);
 			if (!empty($posts_per_page))
 			{
 				$this->posts_per_page($posts_per_page);
@@ -180,6 +181,18 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	// modify viewonline to include new entry in forum table
+	public function viewonline_overwrite_location($event)
+	{
+		$forum_data = $event['forum_data'];
+		foreach ($forum_data as $key => $value)
+		{
+			$forum_id = $value['forum_id'];
+			$forum_data[$forum_id]['forum_posts_per_page'] = $this->get_forum_data($forum_id);
+		}
+		$event['forum_data'] = $forum_data;
+	}
+
 	// change posts_per_page
 	private function posts_per_page($data)
 	{
@@ -223,7 +236,7 @@ class listener implements EventSubscriberInterface
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$posts_per_page[$row['forum_id']] = array(
-					'forum_id'			=> $row['forum_id'],
+					'forum_id'				=> $row['forum_id'],
 					'forum_posts_per_page'	=> $row['forum_posts_per_page'],
 				);
 			}
