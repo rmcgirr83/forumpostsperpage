@@ -5,15 +5,15 @@ phpBB 3.1 extension that alters the number of posts to show in a topic per forum
 
 This extension is the 3.1.x version of the [3.0.x Forum Based Posts Per Page](https://www.phpbb.com/customise/db/mod/forum_based_posts_per_page/)
 
-[![Build Status](https://travis-ci.org/RMcGirr83/forumpostsperpage.svg)](https://travis-ci.org/RMcGirr83/forumpostsperpage)
+[![Build Status](https://travis-ci.org/RMcGirr83/phpBB-3.1-forumpostsperpage.svg)](https://travis-ci.org/RMcGirr83/phpBB-3.1-forumpostsperpage)
 ## Installation
 
 ### 1. clone
-Clone (or download and move) the repository into the folder phpBB3/ext/rmcgirr83/forumpostsperpage:
+Clone (or download and move) the repository into the folder ext/rmcgirr83/forumpostsperpage:
 
 ```
 cd phpBB3
-git clone https://github.com/RMcGirr83/forumpostsperpage.git ext/rmcgirr83/forumpostsperpage/
+git clone https://github.com/RMcGirr83/phpBB-3.1-forumpostsperpage.git ext/rmcgirr83/forumpostsperpage/
 ```
 
 ### 2. activate
