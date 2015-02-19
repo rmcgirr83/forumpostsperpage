@@ -56,7 +56,7 @@ class listener implements EventSubscriberInterface
 			// forum changes to config[posts_per_page]
 			'core.viewforum_get_topic_data'				=> 'viewforum_get_topic_data',
 			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
-			'core.search_modify_rowset'					=> 'search_modify_rowset',
+			//'core.search_modify_rowset'					=> 'search_modify_rowset', /*no events for search as of now*/
 			'core.modify_mcp_modules_display_option'	=> 'modify_mcp_modules_display_option',
 			'core.user_setup'							=> 'user_setup',
 		);
@@ -121,20 +121,6 @@ class listener implements EventSubscriberInterface
 		if (!empty($event['row']['forum_posts_per_page']))
 		{
 			$this->posts_per_page($event['row']['forum_posts_per_page']);
-		}
-	}
-
-	// modify and reset on search
-	public function search_modify_rowset($event)
-	{
-		$forum_id = $event['rowset'];
-		foreach ($forum_id as $row)
-		{
-			$posts_per_page = $this->get_forum_data($row['forum_id']);
-			if (!empty($posts_per_page))
-			{
-				$this->posts_per_page($posts_per_page);
-			}
 		}
 	}
 
