@@ -56,7 +56,7 @@ class listener implements EventSubscriberInterface
 			// forum changes to config[posts_per_page]
 			'core.viewforum_get_topic_data'				=> 'viewforum_get_topic_data',
 			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
-			//'core.search_modify_rowset'					=> 'search_modify_rowset', /*no events for search as of now*/
+			//'core.search_modify_rowset'					=> 'search_modify_rowset',
 			'core.modify_mcp_modules_display_option'	=> 'modify_mcp_modules_display_option',
 			'core.user_setup'							=> 'user_setup',
 		);
@@ -124,6 +124,20 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
+	// modify and reset on search
+	public function search_modify_rowset($event)
+	{
+		$forum_id = $event['rowset'];
+		foreach ($forum_id as $row)
+		{
+			$posts_per_page = $this->get_forum_data($row['forum_id']);
+			if (!empty($posts_per_page))
+			{
+				$this->posts_per_page($posts_per_page);
+			}
+		}
+	}
+
 	// modify and reset mcp
 	public function modify_mcp_modules_display_option($event)
 	{
@@ -176,12 +190,12 @@ class listener implements EventSubscriberInterface
 	private function get_forum_id_from_table($key, $value)
 	{
 		$sql_from = 'FROM ' . TOPICS_TABLE;
-		$sql_where = 'WHERE topic_id = ' . $value;
+		$sql_where = 'WHERE topic_id = ' . (int) $value;
 
 		if ($key == 'p')
 		{
 			$sql_from = 'FROM ' . POSTS_TABLE;
-			$sql_where = 'WHERE post_id = ' . $value;
+			$sql_where = 'WHERE post_id = ' . (int) $value;
 		}
 		$sql = 'SELECT forum_id
 			' . $sql_from . '
