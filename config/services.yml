@@ -2,10 +2,10 @@ services:
     rmcgirr83.forumpostsperpage.listener:
         class: rmcgirr83\forumpostsperpage\event\listener
         arguments:
-            - @cache
-            - @config
-            - @dbal.conn
-            - @request
-            - @user
+            - '@cache'
+            - '@config'
+            - '@dbal.conn'
+            - '@request'
+            - '@user'
         tags:
             - { name: event.listener }
